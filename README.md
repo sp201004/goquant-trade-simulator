@@ -18,7 +18,7 @@
 [![Deploy on Railway](https://railway.app/button.svg)](https://railway.app/template/goquant-trade-simulator)
 
 ### 🔗 Quick Access Links
-- **🌍 Live Demo**: [Deploy Now](https://railway.app/template/goquant-trade-simulator)
+- **🌍 Live Link**: [Deploy Now](https://trade-simulator-production.up.railway.app/)
 - **📚 GitHub Repository**: [github.com/sp201004/goquant-trade-simulator](https://github.com/sp201004/goquant-trade-simulator)
 - **📖 API Documentation**: Available at `/docs` endpoint
 - **❤️ Health Check**: Available at `/health` endpoint
