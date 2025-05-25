@@ -11,7 +11,7 @@
 [![Deploy](https://img.shields.io/badge/Deploy-Railway-blueviolet.svg)](https://railway.app/new/template/goquant)
 [![GitHub](https://img.shields.io/badge/GitHub-Repository-black.svg)](https://github.com/sp201004/goquant-trade-simulator)
 
-## 🌐 Live Demo
+## 🌐 Live
 
 🚀 **Live Application**: Deploy your own instance in one click!
 
