@@ -67,7 +67,7 @@ GoQuant Trade Simulator provides **professional-grade trade cost analysis** for 
 ### ⚡ One-Command Setup (Recommended)
 ```bash
 # Clone, setup, and start (fully automated)
-git clone <repository-url> && cd GoQunat && chmod +x scripts/start.sh && ./scripts/start.sh
+git clone https://github.com/sp201004/goquant-trade-simulator && cd GoQunat && chmod +x scripts/start.sh && ./scripts/start.sh
 ```
 
 ### 📋 Manual Setup (Development)
