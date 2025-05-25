@@ -1,0 +1,17 @@
+services:
+  - type: web
+    name: goquant-trade-simulator
+    env: python
+    plan: free
+    buildCommand: pip install -r requirements.txt
+    startCommand: python main.py
+    envVars:
+      - key: GOQUANT_ENV
+        value: production
+      - key: GOQUANT_HOST
+        value: 0.0.0.0
+      - key: GOQUANT_PORT
+        value: 10000
+      - key: GOQUANT_LOG_LEVEL
+        value: INFO
+    healthCheckPath: /health

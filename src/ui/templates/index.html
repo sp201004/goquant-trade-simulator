@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GoQuant Trade Simulator</title>
+    <link href="/static/css/styles.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <div id="app">
+        <!-- Header -->
+        <header class="header">
+            <div class="header-content">
+                <h1><i class="fas fa-chart-line"></i> GoQuant Trade Simulator</h1>
+                <div class="connection-status">
+                    <span id="connection-indicator" class="status-indicator offline">
+                        <i class="fas fa-circle"></i>
+                    </span>
+                    <span id="connection-text">Connecting...</span>
+                </div>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Market Data Panel -->
+            <section class="panel market-panel">
+                <h2><i class="fas fa-chart-bar"></i> Market Data</h2>
+                <div class="market-grid">
+                    <div class="market-item">
+                        <label>Symbol</label>
+                        <span id="symbol">BTC-USDT-SWAP</span>
+                    </div>
+                    <div class="market-item">
+                        <label>Bid Price</label>
+                        <span id="bid-price" class="price">--</span>
+                    </div>
+                    <div class="market-item">
+                        <label>Ask Price</label>
+                        <span id="ask-price" class="price">--</span>
+                    </div>
+                    <div class="market-item">
+                        <label>Mid Price</label>
+                        <span id="mid-price" class="price">--</span>
+                    </div>
+                    <div class="market-item">
+                        <label>Spread</label>
+                        <span id="spread" class="price">--</span>
+                    </div>
+                    <div class="market-item">
+                        <label>Spread (bps)</label>
+                        <span id="spread-bps">--</span>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Trade Parameters Panel -->
+            <section class="panel trade-params-panel">
+                <h2><i class="fas fa-cog"></i> Trade Parameters</h2>
+                <form id="trade-form" class="trade-form">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="trade-size">Trade Size</label>
+                            <input type="number" id="trade-size" step="0.001" value="1.0" min="0.001" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="order-type">Order Type</label>
+                            <select id="order-type" required>
+                                <option value="market">Market</option>
+                                <option value="limit">Limit</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="side">Side</label>
+                            <select id="side" required>
+                                <option value="buy">Buy</option>
+                                <option value="sell">Sell</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="limit-price">Limit Price</label>
+                            <input type="number" id="limit-price" step="0.1" disabled>
+                            <small>Only for limit orders</small>
+                        </div>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="time-horizon">Time Horizon (seconds)</label>
+                            <input type="number" id="time-horizon" value="300" min="1" max="3600" required>
+                        </div>
+                        <div class="form-group">
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-calculator"></i> Calculate Cost
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </section>
+
+            <!-- Results and Statistics Row -->
+            <section class="results-stats-container">
+                <!-- Cost Estimation Results -->
+                <div class="panel results-panel">
+                    <h2><i class="fas fa-chart-pie"></i> Cost Estimation Results</h2>
+                    <div id="results-content" class="results-content">
+                        <div class="no-results">
+                            <i class="fas fa-info-circle"></i>
+                            <p>Enter trade parameters and click "Calculate Cost" to see estimates</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Statistics Panel -->
+                <div class="panel stats-panel">
+                    <h2><i class="fas fa-chart-area"></i> Performance Statistics</h2>
+                    <div class="stats-grid">
+                        <div class="stat-item">
+                            <label>Total Trades</label>
+                            <span id="total-trades">0</span>
+                        </div>
+                        <div class="stat-item">
+                            <label>Avg Processing Time</label>
+                            <span id="avg-processing-time">-- ms</span>
+                        </div>
+                        <div class="stat-item">
+                            <label>Market Updates</label>
+                            <span id="market-updates">0</span>
+                        </div>
+                        <div class="stat-item">
+                            <label>Model Status</label>
+                            <span id="model-status">Loading...</span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Live Charts Section -->
+            <section class="panel charts-panel">
+                <h2><i class="fas fa-chart-line"></i> Live Cost Analysis</h2>
+                <div class="charts-container">
+                    <div class="chart-row">
+                        <div class="chart-item">
+                            <h3>Cost Breakdown</h3>
+                            <canvas id="costBreakdownChart"></canvas>
+                        </div>
+                        <div class="chart-item">
+                            <h3>Cost History</h3>
+                            <canvas id="costHistoryChart"></canvas>
+                        </div>
+                    </div>
+                    <div class="chart-row">
+                        <div class="chart-item">
+                            <h3>Probability Analysis</h3>
+                            <canvas id="probabilityChart"></canvas>
+                        </div>
+                        <div class="chart-item">
+                            <h3>Market Conditions</h3>
+                            <canvas id="marketConditionsChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <!-- Loading Overlay -->
+        <div id="loading-overlay" class="loading-overlay">
+            <div class="spinner"></div>
+            <p>Calculating trade cost...</p>
+        </div>
+
+        <!-- Error Modal -->
+        <div id="error-modal" class="modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3><i class="fas fa-exclamation-triangle"></i> Error</h3>
+                    <button class="modal-close" onclick="closeErrorModal()">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <p id="error-message">An error occurred.</p>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-secondary" onclick="closeErrorModal()">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="/static/js/app.js"></script>
+    <script src="/static/js/charts.js"></script>
+</body>
+</html>
