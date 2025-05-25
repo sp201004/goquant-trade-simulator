@@ -8,6 +8,27 @@
 [![License](https://img.shields.io/badge/license-Private-red.svg)](LICENSE)
 [![Status](https://img.shields.io/badge/status-Production%20Ready-brightgreen.svg)]()
 [![Coverage](https://img.shields.io/badge/coverage-90%25+-brightgreen.svg)]()
+[![Deploy](https://img.shields.io/badge/Deploy-Railway-blueviolet.svg)](https://railway.app/new/template/goquant)
+[![GitHub](https://img.shields.io/badge/GitHub-Repository-black.svg)](https://github.com/sp201004/goquant-trade-simulator)
+
+## 🌐 Live Demo
+
+🚀 **Live Application**: Deploy your own instance in one click!
+
+[![Deploy on Railway](https://railway.app/button.svg)](https://railway.app/template/goquant-trade-simulator)
+
+### 🔗 Quick Access Links
+- **🌍 Live Demo**: [Deploy Now](https://railway.app/template/goquant-trade-simulator)
+- **📚 GitHub Repository**: [github.com/sp201004/goquant-trade-simulator](https://github.com/sp201004/goquant-trade-simulator)
+- **📖 API Documentation**: Available at `/docs` endpoint
+- **❤️ Health Check**: Available at `/health` endpoint
+
+### 🚀 One-Click Deploy Options
+| Platform | Status | Deploy Link |
+|----------|--------|-------------|
+| Railway | ✅ Ready | [![Deploy on Railway](https://railway.app/button.svg)](https://railway.app/template/goquant-trade-simulator) |
+| Render | ✅ Ready | [![Deploy to Render](https://render.com/images/deploy-to-render-button.svg)](https://render.com/deploy?repo=https://github.com/sp201004/goquant-trade-simulator) |
+| Heroku | ✅ Ready | [![Deploy to Heroku](https://www.herokucdn.com/deploy/button.svg)](https://heroku.com/deploy?template=https://github.com/sp201004/goquant-trade-simulator) |
 
 <div align="center">
   <img src="https://img.shields.io/badge/⚡-High%20Performance-brightgreen.svg" alt="High Performance">
@@ -376,7 +397,7 @@ curl -X POST "http://localhost:8080/api/estimate" \
 python -c "
 import asyncio
 import websockets
-async def test(): 
+async def test():
     async with websockets.connect('ws://localhost:8080/ws') as ws:
         await ws.send('{\"type\": \"ping\"}')
         response = await ws.recv()
