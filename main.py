@@ -172,31 +172,45 @@ try:
             # Record processing start time
             start_time = datetime.now()
             
-            # Simple cost calculation based on trade size
+            # Get trade parameters
             trade_size = trade_request.trade_size
+            current_price = 50000.0 + (hash(str(datetime.now())) % 1000 - 500)
             
-            # Base fee (0.1% for maker, 0.15% for taker)
-            base_fee_rate = 0.001 if trade_request.order_type == "limit" else 0.0015
-            base_fee = trade_size * base_fee_rate
+            # Calculate notional value (this was the bug - need to multiply by price!)
+            notional_value = trade_size * current_price
             
-            # Slippage estimate (increases with trade size and urgency)
-            slippage_rate = min(0.002, (trade_size / 1000000) * 0.001)  # Max 0.2%
-            if trade_request.time_horizon < 60:  # Urgent trades
+            # Calculate fees based on notional value, not trade size
+            # Exchange fees: 0.05% for taker, 0.02% for maker
+            if trade_request.order_type == "limit":
+                exchange_fee_rate = 0.0002  # 2 bps (0.02%)
+            else:
+                exchange_fee_rate = 0.0005  # 5 bps (0.05%)
+            
+            exchange_fee = notional_value * exchange_fee_rate
+            
+            # Slippage cost: 2 bps base, increases with urgency and size
+            slippage_rate = 0.0002  # 2 bps base
+            if trade_request.time_horizon < 60:  # Urgent trades have higher slippage
                 slippage_rate *= 2
-            slippage_cost = trade_size * slippage_rate
+            if trade_size > 1.0:  # Large trades have higher slippage
+                slippage_rate *= (1 + (trade_size - 1) * 0.1)
             
-            # Market impact (for large trades)
-            market_impact_rate = 0 if trade_size < 100000 else (trade_size / 10000000) * 0.001
-            market_impact_cost = trade_size * market_impact_rate
+            slippage_cost = notional_value * slippage_rate
             
-            # Total cost
-            total_cost = base_fee + slippage_cost + market_impact_cost
+            # Market impact: 1 bp base, increases with trade size
+            market_impact_rate = 0.0001  # 1 bp base
+            if trade_size > 0.5:  # Larger trades have more market impact
+                market_impact_rate *= (1 + (trade_size - 0.5) * 0.2)
+            
+            market_impact_cost = notional_value * market_impact_rate
+            
+            # Total cost in USD
+            total_cost = exchange_fee + slippage_cost + market_impact_cost
             
             # Calculate cost in basis points
-            cost_bps = (total_cost / trade_size) * 10000 if trade_size > 0 else 0
+            cost_bps = (total_cost / notional_value) * 10000 if notional_value > 0 else 0
             
             # Calculate probabilities and market conditions
-            current_price = 50000.0 + (hash(str(datetime.now())) % 1000 - 500)
             spread = 1.0
             volatility = 0.02
             
@@ -207,7 +221,7 @@ try:
             maker_prob = min(0.95, maker_prob)
             
             # Market depth calculation
-            market_depth = max(0.5, min(1.0, 1000000 / trade_size)) if trade_size > 0 else 1.0
+            market_depth = max(0.5, min(1.0, 1000000 / notional_value)) if notional_value > 0 else 1.0
             
             # Determine optimal strategy
             if trade_size < 50000:
@@ -234,7 +248,7 @@ try:
                 # Frontend expects cost_breakdown at root level
                 "cost_breakdown": {
                     "total_cost": round(total_cost, 2),
-                    "exchange_fee": round(base_fee, 2),  # frontend expects 'exchange_fee' not 'base_fee'
+                    "exchange_fee": round(exchange_fee, 2),  # frontend expects 'exchange_fee'
                     "slippage_cost": round(slippage_cost, 2),
                     "market_impact": round(market_impact_cost, 2),
                     "cost_bps": round(cost_bps, 2)
